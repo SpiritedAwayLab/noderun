@@ -63,28 +63,36 @@ async function getStatus() {
     return new Promise((resolve, reject) => {
         exec(cmd_str, (err, stdout, stderr) => {
             // console.info(stdout)
-            var statusjson = JSON.parse(stdout);
-            var ok_n = 0;
+            try {
+                var statusjson = JSON.parse(stdout);
+                var ok_n = 0;
 
-            var errormsg = "";
-            console.info(ok_n)
-            statusjson.forEach(item => {
+                var errormsg = "";
+                console.info(ok_n)
 
-                var key = item.name.split('.')[2];
-                var value = item.status;
-                var details = item.details;
-                if (value == "ok") {
-                    ok_n++;
+                statusjson.forEach(item => {
 
-                }
+                    var key = item.name.split('.')[2];
+                    var value = item.status;
+                    var details = item.details;
+                    if (value == "ok") {
+                        ok_n++;
 
-                else
-                    errormsg += key + ":" + details.replace(/\'/g, "");
+                    }
 
-            })
+                    else
+                        errormsg += key + ":" + details.replace(/\'/g, "");
+
+                })
+                resolve([ok_n, errormsg])
+            }
+            catch (e) {
+                resolve([0, 'forta not in run'])
+            }
 
 
-            resolve([ok_n, errormsg])
+
+
 
         })
     })
@@ -147,6 +155,9 @@ async function getReadytoRun() {
 
 
 }
+
+
+
 
 
 
