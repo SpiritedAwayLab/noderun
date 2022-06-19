@@ -24,7 +24,7 @@ var standbymode = true;
         errormsg = rr[1]
 
         await sendReport(sla, okn, errormsg)
-    }, 3000)
+    }, 30000)
 
 })()
 
@@ -68,20 +68,26 @@ async function getStatus() {
                 var ok_n = 0;
 
                 var errormsg = "";
-                console.info(ok_n)
+
 
                 statusjson.forEach(item => {
-
+                    console.info(item)
                     var key = item.name.split('.')[2];
                     var value = item.status;
                     var details = item.details;
                     if (value == "ok") {
+                        console.info(item)
+                        console.info(value)
                         ok_n++;
 
                     }
-
-                    else
+                    else {
+                        //  console.info(item)
+                        //  console.info(details)
                         errormsg += key + ":" + details.replace(/\'/g, "");
+                        //  console.info(errormsg)
+                    }
+
 
                 })
                 resolve([ok_n, errormsg])
@@ -126,6 +132,17 @@ async function getFortaWalletaddress() {
     })
 }
 
+async function startNode(chain) {
+    var cmd_str = `/root/runnode.sh ${chain}`;
+    return new Promise((resolve, reject) => {
+        exec(cmd_str, (err, stdout, stderr) => {
+            console.info(stdout)
+            //  stdout = stdout.replace(/^\s+|\s+$/g, '');
+            // resolve(stdout);
+        })
+    })
+}
+
 
 async function getReadytoRun() {
 
@@ -140,12 +157,15 @@ async function getReadytoRun() {
                 initrun = false;
             }
             else {
+                console.info("start run node");
+                startNode(r);
                 standbymode = false;
                 initrun = false;
             }
         }
         if (standbymode && r != "") {
             console.info("start run node");
+            startNode(r);
             standbymode = false;
         }
         await sleep(3000)
