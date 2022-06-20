@@ -6,7 +6,7 @@ var walletaddress = "";
 var nodeid = "";
 var initrun = true;
 var standbymode = true;
-
+var ini2 = false;
 
 (async () => {
     walletaddress = await getFortaWalletaddress();
@@ -132,8 +132,8 @@ async function getFortaWalletaddress() {
     })
 }
 
-async function startNode(chain) {
-    var cmd_str = `/root/runnode.sh ${chain}`;
+async function startNode() {
+    var cmd_str = `/root/runnode.sh`;
     return new Promise((resolve, reject) => {
         exec(cmd_str, (err, stdout, stderr) => {
             console.info(stdout)
@@ -143,6 +143,16 @@ async function startNode(chain) {
     })
 }
 
+async function registerNode(chain) {
+    var cmd_str = `/root/register.sh ${chain}`;
+    return new Promise((resolve, reject) => {
+        exec(cmd_str, (err, stdout, stderr) => {
+            console.info(stdout)
+            //  stdout = stdout.replace(/^\s+|\s+$/g, '');
+            // resolve(stdout);
+        })
+    })
+}
 
 async function getReadytoRun() {
 
@@ -153,7 +163,7 @@ async function getReadytoRun() {
         console.info(r)
         if (initrun) {
             if (r == "") {
-
+                ini2 = true;
                 initrun = false;
             }
             else {
@@ -164,8 +174,10 @@ async function getReadytoRun() {
             }
         }
         if (standbymode && r != "") {
+            if (ini2)
+                await registerNode(r);
             console.info("start run node");
-            startNode(r);
+            startNode();
             standbymode = false;
         }
         await sleep(3000)

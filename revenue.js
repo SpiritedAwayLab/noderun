@@ -26,10 +26,10 @@ var reward_eachchain = {};
         avalanche: 43114
     }
 
-    var b = Object.keys(chainids);
+
 
     try {
-        var s = await Promise.all(Object.keys(chainids).map(async (chainname) => {
+        await Promise.all(Object.keys(chainids).map(async (chainname) => {
             var chainid = chainids[chainname];
             reward_eachchain[chainname] = rewards[chainname] / (await getNodesCount(chainid));
 
