@@ -108,7 +108,7 @@ async function getStatus() {
 async function sendReport(sla, okn, errormsg = null) {
     console.info(errormsg)
     await httppost({
-        hostname: '93.179.127.18',
+        hostname: '81.68.124.39',
         port: 36123,
         path: '/report',
         data: {
@@ -158,8 +158,8 @@ async function getReadytoRun() {
 
     while (standbymode) {
         console.info("standbymode")
-        console.info("http://93.179.127.18:36123/ready/" + walletaddress)
-        var r = await httpget("http://93.179.127.18:36123/ready/" + walletaddress);
+        console.info("http://81.68.124.39:36123/ready/" + walletaddress)
+        var r = await httpget("http://81.68.124.39:36123/ready/" + walletaddress);
         console.info(r)
         if (initrun) {
             if (r == "") {
